@@ -1,4 +1,19 @@
 var express = require('express');
+var sql = require('mssql');
+//ms sql config this a way and then pass into sql.connect(config, function(err){...})
+var config = {
+    user: 'NodeJs',
+    password: 'Carlyto33',
+    server: 'DELL\\SQLEXPRESS', // Azure or other hosted DB 'gpnju6fwr2.database.windows.net'. You can use 'localhost\\instance' to connect to named instance 
+    database: 'LibraryNodeXWebApp',
+
+    options: {
+        //encrypt: true // Use this if you're on Windows Azure
+    }
+};
+// ms sql connect - AND - Stay alive as context in node server to be use elsewhere
+sql.connect('mssql://NodeJs:Carlyto33@DELL\\SQLEXPRESS/LibraryNodeXWebApp', function(err) {console.log('connect:'); console.log(err);});
+//sql.connect(config, function(err) {console.log(err);});
 
 //  express instance
 var app = express();
@@ -22,7 +37,7 @@ app.use(express.static('public')); // ex everytime a request is made for static 
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
 
-// Set routes
+// nav here for now injeccted so we don't repeat for each route/view
 var nav = [{
     Link: '/Books',
     Text: 'Book'
@@ -30,10 +45,10 @@ var nav = [{
     Link: '/Authors',
     Text: 'Author'
 }];
-var bookRouter = require('./src/routes/bookRoutes')(nav);
+// Set routes
+var bookRouter = require('./src/routes/bookRoutesMsSql')(nav);
 
 app.use('/Books', bookRouter);
-
 
 // setup a handler for a route, when it hits the root
 // param root, callback()
@@ -45,7 +60,7 @@ app.get('/',
         // this is where we can render temaplting view  and pass in var or list ... or an array of objects!
         res.render('index',
             {
-                title: 'Test EJS', 
+                title: 'Test EJS',
                 nav: [{Link:'/Books', Name: 'Books'}, {Link:'/Authors', Name: 'Authors'}]
             }
         );
