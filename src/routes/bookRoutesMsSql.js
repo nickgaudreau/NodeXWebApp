@@ -29,25 +29,37 @@ var router = function (nav) {
         });
 
     bookRouter.route('/:id')
-        .get(function (req, res) {
+        // middleware for all books/id http verbs route
+        .all(function(req, res, next) {
             //var id = req.params.id; // get url    /id
             var ps = new sql.PreparedStatement();
             ps.input('id', sql.Int);
             // then instead of callback function(err) as 2nd param
             ps.prepare(queryById).then(function() {
                 ps.execute({id: req.params.id}).then(function(recordset) {
-                    res.render('book-sql', { // render view name
-                        title: 'Book',
-                        nav: nav,
-                        book: recordset[0] // sql still send back an array
-                    });
+                    if (recordset.length === 0) {
+                        res.status(404).send('Not Found'); // later would render 404 page
+                    }
+                    else {
+                        req.data = recordset[0]; // list sent from server since we are using where...
+                        next();// follow next normal request execution step
+                    }
                 })
                 .catch(function(err) {
+                    // render error page - most likely 500
                     console.log(err);
                 });
             }).catch(function(err) {
                 console.log(err);
             });
+        })
+        .get(function (req, res) {
+            //var id = req.params.id; // get url    /id
+            res.render('book-sql', { // render view name
+                        title: 'Book',
+                        nav: nav,
+                        book: req.data
+                    });
         });
     return bookRouter;
 };
