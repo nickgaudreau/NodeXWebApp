@@ -1,51 +1,46 @@
 var express = require('express');
-var sql = require('mssql'); /// alive contaxt from connect in app.js
+var mongodb = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectID;
 
 var bookRouter = express.Router();
-
-var queryAll = 'select * from book';
-var queryById = 'select * from book where i_id =';
 
 var router = function (nav) {
 
     bookRouter.route('/')
         .get(function (req, res) {
-
-            var request = new sql.Request();
-
-            // then instead of callback function(err, recordset) as 2nd param
-            request.query(queryAll)
-                .then(function (recordset) {
+            var url = 'mongodb://localhost:12345/bookApi';
+            mongodb.connect(url, function (err, db) {
+                var bookCollection = db.collection('books');
+                bookCollection.find({}).toArray(function(err, results) {
                     res.render('book-list', { // render view name
                         title: 'Books',
                         nav: nav,
-                        books: recordset
+                        books: results
                     });
-                })
-                .catch(function (err) {
-                    console.log(err);
-                });
+                }); // wnat all
+            });
         });
 
     bookRouter.route('/:id')
         .get(function (req, res) {
             var id = req.params.id; // get url    /id
-
-            var request = new sql.Request();
-
-            // then instead of callback function(err, recordset) as 2nd param
-            request.query(queryById + id)
-                .then(function (record) {
+            var objId = new ObjectId(id);
+            var url = 'mongodb://localhost:12345/bookApi';
+            mongodb.connect(url).then(function (db) {
+                var bookCollection = db.collection('books');
+                bookCollection.findOne({_id : objId}).then(function(result) {
                     res.render('book', { // render view name
                         title: 'Book',
                         nav: nav,
-                        book: record
+                        book: result
                     });
-                })
-                .catch(function (err) {
+                }).catch(function(err) {
                     console.log(err);
                 });
-
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
         });
     return bookRouter;
 };

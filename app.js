@@ -1,4 +1,6 @@
 var express = require('express');
+
+/* MS SQL
 var sql = require('mssql');
 //ms sql config this a way and then pass into sql.connect(config, function(err){...})
 var config = {
@@ -14,15 +16,13 @@ var config = {
 // ms sql connect - AND - Stay alive as context in node server to be use elsewhere
 sql.connect('mssql://NodeJs:Carlyto33@DELL\\SQLEXPRESS/LibraryNodeXWebApp', function(err) {console.log('connect:'); console.log(err);});
 //sql.connect(config, function(err) {console.log(err);});
+*/
 
 //  express instance
 var app = express();
 
 // setup a port
 var port = process.env.PORT || 8091; // if this does not return : process.env.PORT return 8091
-
-// router
-var bookRouter = express.Router();
 
 /*
 * app.use => set up middleware
@@ -46,9 +46,11 @@ var nav = [{
     Text: 'Author'
 }];
 // Set routes
-var bookRouter = require('./src/routes/bookRoutesMsSql')(nav);
+var bookRouter = require('./src/routes/bookRoutes')(nav);
+var adminRouter = require('./src/routes/adminRoutes')(nav);
 
 app.use('/Books', bookRouter);
+app.use('/Admin', adminRouter);
 
 // setup a handler for a route, when it hits the root
 // param root, callback()
@@ -56,7 +58,6 @@ app.get('/',
     function(req, res) {
         // send => string of text
         //res.send('Node X app');
-
         // this is where we can render temaplting view  and pass in var or list ... or an array of objects!
         res.render('index',
             {
@@ -76,5 +77,3 @@ app.get('/books',
 app.listen(port, function() {
     console.log('Gulp running app on PORT:' + port);
 });
-
-// TEst by typing node  app.js in shell/termnal/cmd/PS

@@ -47,7 +47,7 @@
     <nav class="collapse navbar-collapse" role="navigation">
       <ul class="nav navbar-nav">
         <% for(var i=0; i<nav.length;i++){%>
-          <li><a href="<%=nav[i].Link%>"><%=nav[i].Name%> </a></li>
+          <li><a href="<%=nav[i].Link%>"><%=nav[i].Text%> </a></li>
         <%}%>
       </ul>
       <ul class="nav navbar-right navbar-nav">
@@ -118,7 +118,7 @@
                 <div class="row">
                   <div class="col-xs-9">
                     <h4><span class="label label-default"><%=books[i].author%></span></h4><h4>
-                    <small style="font-family:courier,'new courier';" class="text-muted"><%=books[i].genre%>  • <a href="/Books/<%=i%>" class="text-muted">Read More</a></small>
+                    <small style="font-family:courier,'new courier';" class="text-muted"><%=books[i].genre%>  • <a href="/Books/<%=books[i]._id%>" class="text-muted">Read More</a></small>
                     </h4></div>
                   <div class="col-xs-3"></div>
                 </div>
