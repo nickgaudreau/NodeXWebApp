@@ -5,7 +5,14 @@ var ObjectId = require('mongodb').ObjectID;
 var bookRouter = express.Router();
 
 var router = function (nav) {
-
+    // for all call books or books/id
+    bookRouter.use(function(req, res, next) {
+        // mean it did not pass the passport authenticate otherwise the req would have the user attached to it
+        if (!req.user) {
+            res.redirect('/');
+        }
+        next();
+    });
     bookRouter.route('/')
         .get(function (req, res) {
             var url = 'mongodb://localhost:12345/bookApi';

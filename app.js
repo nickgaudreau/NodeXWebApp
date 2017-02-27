@@ -1,5 +1,8 @@
 var express = require('express');
-
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var passport = require('passport');
+var session = require('express-session');
 /* MS SQL
 var sql = require('mssql');
 //ms sql config this a way and then pass into sql.connect(config, function(err){...})
@@ -26,13 +29,21 @@ var port = process.env.PORT || 8091; // if this does not return : process.env.PO
 
 /*
 * app.use => set up middleware
-* setup our static dir
+* init our dependencies
 */
 app.use(express.static('public')); // ex everytime a request is made for static file such as *.js or *.css, the server will look into that folder 1st
+// bodyParser.json() to capture our form body object data as JSON, so we can use in http verbs function req param
+app.use(bodyParser.json());
+// urlencoded=> to capture our form URL encoded body object data, so we can use in http verbs function req param
+app.use(bodyParser.urlencoded());
+// init cookieParser
+app.use(cookieParser());
+// session take a secret
+app.use(session({secret : 'library'}));
+require('./src/config/passport')(app); // we pass app and do our app.use in passport.js
 
 // access views
 //app.use(express.static('src/views'));
-
 // Set views templating ejs
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
@@ -48,9 +59,11 @@ var nav = [{
 // Set routes
 var bookRouter = require('./src/routes/bookRoutes')(nav);
 var adminRouter = require('./src/routes/adminRoutes')(nav);
+var authRouter = require('./src/routes/authRoutes')(nav);
 
 app.use('/Books', bookRouter);
 app.use('/Admin', adminRouter);
+app.use('/Auth', authRouter);
 
 // setup a handler for a route, when it hits the root
 // param root, callback()
