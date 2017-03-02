@@ -4,15 +4,59 @@ var mongodb = require('mongodb').MongoClient;
 
 var books = [
         {
-            title: 'Test insert many',
-            genre: 'Historical Fiction2',
-            author: 'Lev Nikolayevich Tolstoy2',
+            title: 'War and Peace',
+            genre: 'Historical Fiction',
+            author: 'Lev Nikolayevich Tolstoy',
+            bookId: 656,
             read: false
         },
         {
-            title: 'Test insert many2',
-            genre: 'Historical Fiction22',
-            author: 'Lev Nikolayevich Tolstoy22',
+            title: 'Les Misérables',
+            genre: 'Historical Fiction',
+            author: 'Victor Hugo',
+            bookId: 50,
+            read: false
+        },
+        {
+            title: 'The Time Machine',
+            genre: 'Science Fiction',
+            author: 'H. G. Wells',
+            bookId:51,
+            read: false
+        },
+        {
+            title: 'A Journey into the Center of the Earth',
+            genre: 'Science Fiction',
+            author: 'Jules Verne',
+            bookId:52,
+            read: false
+        },
+        {
+            title: 'The Dark World',
+            genre: 'Fantasy',
+            author: 'Henry Kuttner',
+            bookId:53,
+            read: false
+        },
+        {
+            title: 'The Wind in the Willows',
+            genre: 'Fantasy',
+            author: 'Kenneth Grahame',
+            bookId:44,
+            read: false
+        },
+        {
+            title: 'Life On The Mississippi',
+            genre: 'History',
+            author: 'Mark Twain',
+            bookId: 55,
+            read: false
+        },
+        {
+            title: 'Childhood',
+            genre: 'Biography',
+            author: 'Lev Nikolayevich Tolstoy',
+            bookId: 66,
             read: false
         }
     ];

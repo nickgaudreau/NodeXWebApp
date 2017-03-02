@@ -15,6 +15,7 @@ var bookController = function(bookService, nav) {
             mongodb.connect(url, function (err, db) {
                 var bookCollection = db.collection('books');
                 bookCollection.find({}).toArray(function(err, results) {
+                    console.log(results);
                     res.render('book-list', { // render view name
                         title: 'Books',
                         nav: nav,
@@ -31,11 +32,25 @@ var bookController = function(bookService, nav) {
             mongodb.connect(url).then(function (db) {
                 var bookCollection = db.collection('books');
                 bookCollection.findOne({_id : objId}).then(function(result) {
-                    res.render('book', { // render view name
-                        title: 'Book',
-                        nav: nav,
-                        book: result
-                    });
+
+                    // we will pass new mongo field isbn in , then on callback exec our rendering with new data captured attach it to result
+                    if (result.bookId) {
+                        bookService.getBookById(result.bookId, function(err, goodreadBook) {
+                            result.goodreadData = goodreadBook;
+                            res.render('book', { // render view name
+                                title: 'Book',
+                                nav: nav,
+                                book: result // now we have new data attahced to rssult
+                            });
+                        });
+                    }
+                    else {
+                        res.render('book', { // render view name
+                                title: 'Book',
+                                nav: nav,
+                                book: result // now we have new data attahced to rssult
+                            });
+                    }
                 }).catch(function(err) {
                     console.log(err);
                 });
